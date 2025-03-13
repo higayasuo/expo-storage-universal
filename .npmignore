@@ -1,0 +1,48 @@
+# Source
+src/
+
+# Tests
+__tests__/
+coverage/
+*.spec.ts
+vitest.config.ts
+
+# Development configs
+.gitignore
+.npmignore
+tsconfig.json
+.prettierrc
+.eslintrc
+.eslintignore
+.editorconfig
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+.env*
+*.log
+
+# npm pack
+*.tgz
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Git
+.git/
+.github/
+
+# Documentation
+docs/
+CONTRIBUTING.md
+
+# Don't ignore
+!dist/
+!LICENSE
+!README.md
+!CHANGELOG.md
