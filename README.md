@@ -16,15 +16,11 @@ A universal storage implementation for Expo that works across all platforms, inc
 npm install expo-storage-universal
 ```
 
-### Peer Dependencies
+To use this library in your project, you need to run the following commands:
 
-This package requires the following peer dependencies:
-
-```json
-{
-  "@react-native-async-storage/async-storage": "^1.23.1",
-  "expo-secure-store": "~14.0.1"
-}
+```bash
+npx expo install @react-native-async-storage/async-storage
+npx expo install expo-secure-store
 ```
 
 ## Usage
