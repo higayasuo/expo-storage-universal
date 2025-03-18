@@ -14,7 +14,6 @@ export default defineConfig({
       external: [
         '@react-native-async-storage/async-storage',
         'expo-secure-store',
-        'react-native',
       ],
     },
   },
