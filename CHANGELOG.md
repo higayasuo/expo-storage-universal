@@ -16,40 +16,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Simplified Storage interface to focus on core operations
-- Renamed platformStorage to regularStorage and secureStorage for clarity
 - Updated method names for consistency across all implementations
 - Improved error handling in StorageWrapper implementations
-- Enhanced documentation with examples and security considerations
+- Enhanced documentation with examples
 
 ### Fixed
 - Method name inconsistencies across implementations
 - Type safety issues in storage operations
 - Documentation to reflect current API
 
-## [0.1.2] - 2024-03-13
-
-### Changed
-- Renamed get methods to find methods for consistency: `getFromStorage` → `findFromStorage` and `getFromSecureStorage` → `findFromSecureStorage`
-- Fixed method name typo in NativeStorage implementation
-- Updated tests to use correct method names
-- Updated documentation to reflect naming changes
-
-## [0.1.1] - 2024-03-13
-
-### Changed
-- Removed React Native dependency
-- Updated platform detection to use `window.postMessage` instead of React Native's Platform API
-- Improved web detection with proper type checking
-
 ## [0.1.0] - 2024-03-13
 
 ### Added
 - Initial release
 - Universal storage interface for Expo applications
-- Platform-specific implementations for web and native platforms
-- WebStorage implementation using sessionStorage for both regular and secure operations (with security limitations on web)
-- NativeStorage implementation using AsyncStorage for regular storage and SecureStore for encrypted secure storage
-- Automatic platform detection and implementation switching
-- Full test coverage for WebStorage implementation
 - TypeScript support with full type definitions
-- Comprehensive documentation and usage examples with security considerations
+- Comprehensive documentation and usage examples
