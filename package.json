@@ -1,6 +1,6 @@
 {
   "name": "expo-storage-universal",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A universal storage implementation for Expo that works across all platforms. Features type-safe storage wrappers for strings and binary data.",
   "type": "module",
   "main": "./dist/index.js",
