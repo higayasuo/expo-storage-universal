@@ -1,7 +1,7 @@
 {
   "name": "expo-storage-universal",
   "version": "0.2.0",
-  "description": "A universal storage implementation for Expo that works across all platforms, including web. This package extends @react-native-async-storage/async-storage and expo-secure-store functionality by providing a consistent interface that works on web platforms and automatically switches implementations based on the platform.",
+  "description": "A universal storage implementation for Expo that works across all platforms. Features type-safe storage wrappers for strings and binary data.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -24,9 +24,7 @@
   "keywords": [
     "expo",
     "storage",
-    "universal",
-    "async-storage",
-    "secure-store"
+    "universal"
   ],
   "author": "",
   "license": "MIT",
@@ -37,10 +35,6 @@
     "vite": "^6.2.1",
     "vite-plugin-dts": "^4.5.3",
     "vitest": "^3.0.8"
-  },
-  "peerDependencies": {
-    "@react-native-async-storage/async-storage": "^1.23.1",
-    "expo-secure-store": "~14.0.1"
   },
   "dependencies": {
     "base64-js": "^1.5.1"

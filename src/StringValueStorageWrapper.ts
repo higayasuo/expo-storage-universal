@@ -15,8 +15,8 @@ import { Storage } from './Storage';
  * ```
  */
 export class StringValueStorageWrapper implements StorageWrapper<string> {
-  private storage: Storage;
-  private key: string;
+  protected storage: Storage;
+  protected key: string;
 
   /**
    * Creates a new instance of StringValueStorageWrapper.

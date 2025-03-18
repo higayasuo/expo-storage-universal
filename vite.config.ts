@@ -11,10 +11,7 @@ export default defineConfig({
       formats: ['es', 'cjs'],
     },
     rollupOptions: {
-      external: [
-        '@react-native-async-storage/async-storage',
-        'expo-secure-store',
-      ],
+      external: [],
     },
   },
   plugins: [dts({ rollupTypes: true })],
