@@ -14,11 +14,11 @@ export class NativeStorage implements Storage {
   constructor() {}
 
   /**
-   * Retrieves a value from regular storage.
+   * Finds a value from regular storage.
    * @param {string} key - The key of the item to retrieve.
    * @returns {Promise<string | undefined>} - A promise that resolves to the retrieved value or undefined if not found.
    */
-  async getFromStorage(key: string): Promise<string | undefined> {
+  async findFromStorage(key: string): Promise<string | undefined> {
     return (await AsyncStorage.getItem(key)) ?? undefined;
   }
 
@@ -42,11 +42,11 @@ export class NativeStorage implements Storage {
   }
 
   /**
-   * Retrieves a value from secure storage.
+   * Finds a value from secure storage.
    * @param {string} key - The key of the item to retrieve.
    * @returns {Promise<string | undefined>} - A promise that resolves to the retrieved value or undefined if not found.
    */
-  async getFromSecureStorage(key: string): Promise<string | undefined> {
+  async findFromSecureStorage(key: string): Promise<string | undefined> {
     return (await SecureStore.getItemAsync(key)) ?? undefined;
   }
 

@@ -3,11 +3,11 @@
  */
 export interface Storage {
   /**
-   * Retrieves a value from regular storage by key
+   * Finds a value from regular storage by key
    * @param key - The key to look up
    * @returns Promise resolving to the stored value, or undefined if not found
    */
-  getFromStorage: (key: string) => Promise<string | undefined>;
+  findFromStorage: (key: string) => Promise<string | undefined>;
 
   /**
    * Saves a value to regular storage
@@ -25,11 +25,11 @@ export interface Storage {
   removeFromStorage: (key: string) => Promise<void>;
 
   /**
-   * Retrieves a value from secure storage by key
+   * Finds a value from secure storage by key
    * @param key - The key to look up
    * @returns Promise resolving to the stored value, or undefined if not found
    */
-  getFromSecureStorage: (key: string) => Promise<string | undefined>;
+  findFromSecureStorage: (key: string) => Promise<string | undefined>;
 
   /**
    * Saves a value to secure storage

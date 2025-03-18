@@ -30,12 +30,12 @@ import { platformStorage } from 'expo-storage-universal';
 
 // Regular storage operations
 await platformStorage.saveToStorage('key', 'value');
-const value = await platformStorage.getFromStorage('key');
+const value = await platformStorage.findFromStorage('key');
 await platformStorage.removeFromStorage('key');
 
 // Secure storage operations (recommended only for native platforms)
 await platformStorage.saveToSecureStorage('secureKey', 'secretValue');
-const secretValue = await platformStorage.getFromSecureStorage('secureKey');
+const secretValue = await platformStorage.findFromSecureStorage('secureKey');
 await platformStorage.removeFromSecureStorage('secureKey');
 ```
 
@@ -46,12 +46,12 @@ await platformStorage.removeFromSecureStorage('secureKey');
 ```typescript
 interface Storage {
   // Regular storage operations
-  getFromStorage(key: string): Promise<string | undefined>;
+  findFromStorage(key: string): Promise<string | undefined>;
   saveToStorage(key: string, value: string): Promise<void>;
   removeFromStorage(key: string): Promise<void>;
 
   // Secure storage operations
-  getFromSecureStorage(key: string): Promise<string | undefined>;
+  findFromSecureStorage(key: string): Promise<string | undefined>;
   saveToSecureStorage(key: string, value: string): Promise<void>;
   removeFromSecureStorage(key: string): Promise<void>;
 }

@@ -14,7 +14,7 @@ describe('WebStorage', () => {
 
       await storage.saveToStorage('testKey', testValue);
 
-      const result = await storage.getFromStorage('testKey');
+      const result = await storage.findFromStorage('testKey');
 
       expect(result).toEqual(testValue);
     });
@@ -37,21 +37,21 @@ describe('WebStorage', () => {
       await storage.saveToStorage('testKey', testValue);
 
       // Verify it's there
-      const beforeDelete = await storage.getFromStorage('testKey');
+      const beforeDelete = await storage.findFromStorage('testKey');
       expect(beforeDelete).toEqual(testValue);
 
       // Delete it
       await storage.removeFromStorage('testKey');
 
       // Verify it's gone
-      const afterDelete = await storage.getFromStorage('testKey');
+      const afterDelete = await storage.findFromStorage('testKey');
       expect(afterDelete).toBeUndefined();
     });
 
     it('should return undefined for non-existent keys', async () => {
       const storage = new WebStorage();
 
-      const result = await storage.getFromStorage('nonExistentKey');
+      const result = await storage.findFromStorage('nonExistentKey');
 
       expect(result).toBeUndefined();
     });
@@ -64,7 +64,7 @@ describe('WebStorage', () => {
 
       await storage.saveToSecureStorage('secureKey', testValue);
 
-      const result = await storage.getFromSecureStorage('secureKey');
+      const result = await storage.findFromSecureStorage('secureKey');
 
       expect(result).toEqual(testValue);
     });
@@ -87,21 +87,21 @@ describe('WebStorage', () => {
       await storage.saveToSecureStorage('secureKey', testValue);
 
       // Verify it's there
-      const beforeDelete = await storage.getFromSecureStorage('secureKey');
+      const beforeDelete = await storage.findFromSecureStorage('secureKey');
       expect(beforeDelete).toEqual(testValue);
 
       // Delete it
       await storage.removeFromSecureStorage('secureKey');
 
       // Verify it's gone
-      const afterDelete = await storage.getFromSecureStorage('secureKey');
+      const afterDelete = await storage.findFromSecureStorage('secureKey');
       expect(afterDelete).toBeUndefined();
     });
 
     it('should return undefined for non-existent secure keys', async () => {
       const storage = new WebStorage();
 
-      const result = await storage.getFromSecureStorage('nonExistentKey');
+      const result = await storage.findFromSecureStorage('nonExistentKey');
 
       expect(result).toBeUndefined();
     });
@@ -116,12 +116,12 @@ describe('WebStorage', () => {
       await storage.saveToSecureStorage('secureKey', 'secure value');
 
       // Verify both values are stored correctly
-      expect(await storage.getFromStorage('regularKey')).toBe('regular value');
-      expect(await storage.getFromSecureStorage('secureKey')).toBe('secure value');
+      expect(await storage.findFromStorage('regularKey')).toBe('regular value');
+      expect(await storage.findFromSecureStorage('secureKey')).toBe('secure value');
 
       // Values should be isolated - regular storage shouldn't see secure values and vice versa
-      expect(await storage.getFromStorage('secureKey')).toBeUndefined();
-      expect(await storage.getFromSecureStorage('regularKey')).toBeUndefined();
+      expect(await storage.findFromStorage('secureKey')).toBeUndefined();
+      expect(await storage.findFromSecureStorage('regularKey')).toBeUndefined();
     });
   });
 });

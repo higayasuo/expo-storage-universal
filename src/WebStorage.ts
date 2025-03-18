@@ -18,7 +18,7 @@ export class WebStorage implements Storage {
    * @param {string} key - The key of the item to retrieve.
    * @returns {Promise<string | undefined>} - A promise that resolves to the retrieved value or undefined if not found.
    */
-  async getFromStorage(key: string): Promise<string | undefined> {
+  async findFromStorage(key: string): Promise<string | undefined> {
     return sessionStorage.getItem(this.REGULAR_PREFIX + key) ?? undefined;
   }
 
@@ -42,11 +42,11 @@ export class WebStorage implements Storage {
   }
 
   /**
-   * Retrieves a value from secure storage.
+   * Finds a value from secure storage.
    * @param {string} key - The key of the item to retrieve.
    * @returns {Promise<string | undefined>} - A promise that resolves to the retrieved value or undefined if not found.
    */
-  async getFromSecureStorage(key: string): Promise<string | undefined> {
+  async findFromSecureStorage(key: string): Promise<string | undefined> {
     return sessionStorage.getItem(this.SECURE_PREFIX + key) ?? undefined;
   }
 
