@@ -1,48 +1,29 @@
 /**
- * Interface for handling both regular and secure storage operations
+ * Universal Storage interface that works across all platforms (web and native).
  */
 export interface Storage {
   /**
-   * Finds a value from regular storage by key
-   * @param key - The key to look up
-   * @returns Promise resolving to the stored value, or undefined if not found
+   * Retrieves a value from storage.
+   *
+   * @param key - The key of the item to retrieve.
+   * @returns A promise that resolves to the retrieved value or undefined if not found.
    */
-  findFromStorage: (key: string) => Promise<string | undefined>;
+  find: (key: string) => Promise<string | undefined>;
 
   /**
-   * Saves a value to regular storage
-   * @param key - The key to store under
-   * @param value - The string value to store
-   * @returns Promise that resolves when save is complete
+   * Saves a value to storage.
+   *
+   * @param key - The key under which the value should be stored.
+   * @param value - The value to store.
+   * @returns A promise that resolves when the value has been saved.
    */
-  saveToStorage: (key: string, value: string) => Promise<void>;
+  save: (key: string, value: string) => Promise<void>;
 
   /**
-   * Removes a value from regular storage
-   * @param key - The key to remove
-   * @returns Promise that resolves when removal is complete
+   * Removes a value from storage.
+   *
+   * @param key - The key of the item to remove.
+   * @returns A promise that resolves when the value has been removed.
    */
-  removeFromStorage: (key: string) => Promise<void>;
-
-  /**
-   * Finds a value from secure storage by key
-   * @param key - The key to look up
-   * @returns Promise resolving to the stored value, or undefined if not found
-   */
-  findFromSecureStorage: (key: string) => Promise<string | undefined>;
-
-  /**
-   * Saves a value to secure storage
-   * @param key - The key to store under
-   * @param value - The string value to store
-   * @returns Promise that resolves when save is complete
-   */
-  saveToSecureStorage: (key: string, value: string) => Promise<void>;
-
-  /**
-   * Removes a value from secure storage
-   * @param key - The key to remove
-   * @returns Promise that resolves when removal is complete
-   */
-  removeFromSecureStorage: (key: string) => Promise<void>;
+  remove: (key: string) => Promise<void>;
 }
