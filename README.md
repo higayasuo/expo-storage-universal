@@ -116,12 +116,12 @@ interface StorageWrapper<T> {
 ## Platform-Specific Implementations
 
 ### Native Platform (iOS/Android)
-The `expo-storage-universal-native` package provides:
+The [expo-storage-universal-native](https://github.com/higayasuo/expo-storage-universal-native) package provides:
 - `NativeRegularStorage`: Non-secure storage using `@react-native-async-storage/async-storage`
 - `NativeSecureStorage`: Secure storage using `expo-secure-store`
 
 ### Web Platform
-The `expo-storage-universal-web` package provides:
+The [expo-storage-universal-web](https://github.com/higayasuo/expo-storage-universal-web) package provides:
 - `WebRegularStorage`: Storage using `sessionStorage`
 - `WebSecureStorage`: Storage using `sessionStorage` (Note: For truly secure storage, use `NativeSecureStorage` on native platforms)
 
