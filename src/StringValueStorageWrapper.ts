@@ -44,7 +44,7 @@ export class StringValueStorageWrapper implements StorageWrapper<string> {
    * @returns {Promise<string>} A promise that resolves to the stored string value
    * @throws {Error} If no value is found or if there's an error accessing the storage
    */
-  async retrieve(): Promise<string | undefined> {
+  async retrieve(): Promise<string> {
     const value = await this.storage.find(this.key);
 
     if (!value) {

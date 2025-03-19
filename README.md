@@ -102,8 +102,8 @@ interface Storage {
 
 ```typescript
 interface StorageWrapper<T> {
-  find(): Promise<T | undefined>;
-  retrieve(): Promise<T>;
+  find(): Promise<T | undefined>;  // Returns undefined if not found
+  retrieve(): Promise<T>;         // Throws error if not found
   save(value: T): Promise<void>;
   remove(): Promise<void>;
 }

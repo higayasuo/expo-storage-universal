@@ -21,11 +21,13 @@ export interface StorageWrapper<T> {
   find(): Promise<T | undefined>;
 
   /**
-   * Alias for find(). Retrieves a value from storage.
-   * @returns {Promise<T | undefined>} A promise that resolves to the stored value or undefined if not found
-   * @throws {Error} If there's an error accessing the storage
+   * Retrieves a value from storage.
+   * Unlike find(), this method throws an error if no value is found.
+   *
+   * @returns {Promise<T>} A promise that resolves to the stored value
+   * @throws {Error} If no value is found or if there's an error accessing the storage
    */
-  retrieve(): Promise<T | undefined>;
+  retrieve(): Promise<T>;
 
   /**
    * Saves a value to storage.
