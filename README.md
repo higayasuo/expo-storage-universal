@@ -8,6 +8,7 @@ A universal storage implementation for Expo that works across all platforms. Thi
 - 📦 Type-safe storage wrappers for different data types
 - 🔐 Base64 encoding support for binary data
 - 📱 Consistent interface across platforms
+- ⚡ Efficient storage format for each data type
 
 ## Installation
 
@@ -30,22 +31,32 @@ npm install expo-storage-universal-web
 ### Getting Storage Instances
 
 #### Platform-Specific Imports
+
 ```typescript
 import { Platform } from 'react-native';
-import { WebRegularStorage, WebSecureStorage } from 'expo-storage-universal-web';
+import {
+  WebRegularStorage,
+  WebSecureStorage,
+} from 'expo-storage-universal-web';
 import {
   NativeRegularStorage,
   NativeSecureStorage,
 } from 'expo-storage-universal-native';
 
 // Conditionally create storage instances based on platform
-const regularStorage = Platform.OS === 'web' ? new WebRegularStorage() : new NativeRegularStorage();
-const secureStorage = Platform.OS === 'web' ? new WebSecureStorage() : new NativeSecureStorage();
+const regularStorage =
+  Platform.OS === 'web' ? new WebRegularStorage() : new NativeRegularStorage();
+const secureStorage =
+  Platform.OS === 'web' ? new WebSecureStorage() : new NativeSecureStorage();
 ```
 
 #### Web Platform
+
 ```typescript
-import { WebRegularStorage, WebSecureStorage } from 'expo-storage-universal-web';
+import {
+  WebRegularStorage,
+  WebSecureStorage,
+} from 'expo-storage-universal-web';
 
 // For regular storage (non-secure)
 const regularStorage = new WebRegularStorage();
@@ -55,6 +66,7 @@ const secureStorage = new WebSecureStorage();
 ```
 
 #### Native Platform (iOS/Android)
+
 ```typescript
 import {
   NativeRegularStorage,
@@ -71,13 +83,40 @@ const secureStorage = new NativeSecureStorage();
 ### Type-Safe Storage Wrappers
 
 ```typescript
-import { StringValueStorageWrapper, Uint8ArrayValueStorageWrapper } from 'expo-storage-universal';
+import {
+  StringValueStorageWrapper,
+  NumberValueStorageWrapper,
+  BooleanValueStorageWrapper,
+  DateValueStorageWrapper,
+  JsonValueStorageWrapper,
+  Uint8ArrayValueStorageWrapper,
+} from 'expo-storage-universal';
 
 // String value storage
 const tokenStorage = new StringValueStorageWrapper(storage, 'auth-token');
 await tokenStorage.save('abc123');
 const token = await tokenStorage.retrieve(); // Throws if not found
 const maybeToken = await tokenStorage.find(); // Returns undefined if not found
+
+// Number value storage
+const countStorage = new NumberValueStorageWrapper(storage, 'counter');
+await countStorage.save(42);
+const count = await countStorage.retrieve();
+
+// Boolean value storage (uses '1'/'0' for efficient storage)
+const flagStorage = new BooleanValueStorageWrapper(storage, 'feature-flag');
+await flagStorage.save(true);
+const isEnabled = await flagStorage.retrieve();
+
+// Date value storage (uses timestamp for efficient storage)
+const lastLoginStorage = new DateValueStorageWrapper(storage, 'last-login');
+await lastLoginStorage.save(new Date());
+const lastLogin = await lastLoginStorage.retrieve();
+
+// JSON value storage
+const userStorage = new JsonValueStorageWrapper<User>(storage, 'user-data');
+await userStorage.save({ id: 1, name: 'John' });
+const user = await userStorage.retrieve();
 
 // Binary data storage (automatically handles base64 encoding/decoding)
 const binaryStorage = new Uint8ArrayValueStorageWrapper(storage, 'binary-data');
@@ -102,26 +141,46 @@ interface Storage {
 
 ```typescript
 interface StorageWrapper<T> {
-  find(): Promise<T | undefined>;  // Returns undefined if not found
-  retrieve(): Promise<T>;         // Throws error if not found
+  find(): Promise<T | undefined>; // Returns undefined if not found
+  retrieve(): Promise<T>; // Throws error if not found
   save(value: T): Promise<void>;
   remove(): Promise<void>;
 }
 ```
 
 ### Available Storage Wrappers
+
 - `StringValueStorageWrapper`: For storing string values
+- `NumberValueStorageWrapper`: For storing number values
+- `BooleanValueStorageWrapper`: For storing boolean values (uses '1'/'0' for efficient storage)
+- `DateValueStorageWrapper`: For storing Date values (uses timestamp for efficient storage)
+- `JsonValueStorageWrapper<T>`: For storing JSON data with type safety
 - `Uint8ArrayValueStorageWrapper`: For storing binary data (automatically handles base64 encoding/decoding)
+
+## Storage Format Details
+
+Each wrapper uses an optimized storage format:
+
+- **String**: Stored as-is
+- **Number**: Stored as string representation
+- **Boolean**: Stored as '1'/'0' for minimal storage usage
+- **Date**: Stored as timestamp (number) for efficient storage and parsing
+- **JSON**: Stored as stringified JSON
+- **Binary**: Stored as base64-encoded string
 
 ## Platform-Specific Implementations
 
 ### Native Platform (iOS/Android)
+
 The [expo-storage-universal-native](https://github.com/higayasuo/expo-storage-universal-native) package provides:
+
 - `NativeRegularStorage`: Non-secure storage using `@react-native-async-storage/async-storage`
 - `NativeSecureStorage`: Secure storage using `expo-secure-store`
 
 ### Web Platform
+
 The [expo-storage-universal-web](https://github.com/higayasuo/expo-storage-universal-web) package provides:
+
 - `WebRegularStorage`: Storage using `sessionStorage`
 - `WebSecureStorage`: Storage using `sessionStorage` (Note: For truly secure storage, use `NativeSecureStorage` on native platforms)
 
