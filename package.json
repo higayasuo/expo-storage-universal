@@ -1,6 +1,6 @@
 {
   "name": "expo-storage-universal",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A universal storage implementation for Expo that works across all platforms. Features type-safe storage wrappers for strings and binary data.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -27,7 +27,7 @@
     "storage",
     "universal"
   ],
-  "author": "",
+  "author": "Yasuo Higa <higayasuo@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.13.10",
