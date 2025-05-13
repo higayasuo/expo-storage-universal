@@ -127,46 +127,42 @@ interface User {
   active: boolean;
 }
 
-const usersStorage = new JsonValuesStorageWrapper<User>(storage, 'users');
+const compareById = (a: User, b: User) => a.id - b.id;
+const usersStorage = new JsonValuesStorageWrapper<User>(
+  storage,
+  'users',
+  compareById,
+);
 
 // Add a new user
 await usersStorage.addItem({ id: 1, name: 'John', active: true });
 
 // Update a user
-await usersStorage.updateItem(
-  { id: 1, name: 'Johnny', active: true },
-  (a, b) => a.id - b.id,
-);
+await usersStorage.updateItem({ id: 1, name: 'Johnny', active: true });
 
 // Update multiple users
-await usersStorage.updateItems(
-  [
-    { id: 1, name: 'Johnny', active: true },
-    { id: 2, name: 'Jane', active: false },
-  ],
-  (a, b) => a.id - b.id,
-);
+await usersStorage.updateItems([
+  { id: 1, name: 'Johnny', active: true },
+  { id: 2, name: 'Jane', active: false },
+]);
 
 // Remove a user
-await usersStorage.removeItem(
-  { id: 1, name: 'Johnny', active: true },
-  (a, b) => a.id - b.id,
-);
+await usersStorage.removeItem({ id: 1, name: 'Johnny', active: true });
 
 // Remove multiple users
-await usersStorage.removeItems(
-  [
-    { id: 1, name: 'Johnny', active: true },
-    { id: 2, name: 'Jane', active: false },
-  ],
-  (a, b) => a.id - b.id,
-);
+await usersStorage.removeItems([
+  { id: 1, name: 'Johnny', active: true },
+  { id: 2, name: 'Jane', active: false },
+]);
 
 // Filter active users
 const activeUsers = await usersStorage.getItemsByFilter((user) => user.active);
 
-// Sort users by name
-const sortedUsers = await usersStorage.sortItems((a, b) =>
+// Sort users by name (using default comparison from constructor)
+const sortedUsers = await usersStorage.sortItems();
+
+// Sort users by name (using custom comparison)
+const sortedByName = await usersStorage.sortItems((a, b) =>
   a.name.localeCompare(b.name),
 );
 
@@ -214,26 +210,33 @@ interface StorageWrapper<T> {
 
 ```typescript
 class JsonValuesStorageWrapper<T> extends JsonValueStorageWrapper<T[]> {
+  constructor(
+    storage: Storage,
+    key: string,
+    compareItem: (a: T, b: T) => number,
+  );
+
   // Add a single item to the array
   addItem(item: T): Promise<void>;
 
   // Update a single item in the array
-  updateItem(item: T, compareItem: (a: T, b: T) => number): Promise<void>;
+  updateItem(item: T): Promise<void>;
 
   // Update multiple items in the array
-  updateItems(items: T[], compareItem: (a: T, b: T) => number): Promise<void>;
+  updateItems(items: T[]): Promise<void>;
 
   // Remove a single item from the array
-  removeItem(item: T, compareItem: (a: T, b: T) => number): Promise<void>;
+  removeItem(item: T): Promise<void>;
 
   // Remove multiple items from the array
-  removeItems(items: T[], compareItem: (a: T, b: T) => number): Promise<void>;
+  removeItems(items: T[]): Promise<void>;
 
   // Filter items in the array
   getItemsByFilter(filterItem: (item: T) => boolean): Promise<T[]>;
 
   // Sort items in the array (returns new array, doesn't modify storage)
-  sortItems(compareItem: (a: T, b: T) => number): Promise<T[]>;
+  // If no comparison function is provided, uses the one from constructor
+  sortItems(compareItem?: (a: T, b: T) => number): Promise<T[]>;
 }
 ```
 

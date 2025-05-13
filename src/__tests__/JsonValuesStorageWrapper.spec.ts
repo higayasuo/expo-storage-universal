@@ -26,7 +26,11 @@ describe('JsonValuesStorageWrapper', () => {
       save: vi.fn(),
       remove: vi.fn(),
     };
-    wrapper = new JsonValuesStorageWrapper<TestData>(mockStorage, testKey);
+    wrapper = new JsonValuesStorageWrapper<TestData>(
+      mockStorage,
+      testKey,
+      compareById,
+    );
   });
 
   describe('addItem', () => {
@@ -57,7 +61,7 @@ describe('JsonValuesStorageWrapper', () => {
     it('should update an existing item', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       const updatedItem = { ...testData[0], name: 'Johnny' };
-      await wrapper.updateItem(updatedItem, compareById);
+      await wrapper.updateItem(updatedItem);
       const expectedData = [updatedItem, testData[1], testData[2]];
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
@@ -68,9 +72,7 @@ describe('JsonValuesStorageWrapper', () => {
     it('should throw an error when item is not found', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       const nonExistentItem = { id: 999, name: 'Unknown', active: true };
-      await expect(
-        wrapper.updateItem(nonExistentItem, compareById),
-      ).rejects.toThrow(
+      await expect(wrapper.updateItem(nonExistentItem)).rejects.toThrow(
         'Item not found in storage. The item may have been deleted or the comparison function may not match any existing items.',
       );
     });
@@ -83,7 +85,7 @@ describe('JsonValuesStorageWrapper', () => {
         { ...testData[0], name: 'Johnny' },
         { ...testData[2], name: 'Bobby' },
       ];
-      await wrapper.updateItems(updatedItems, compareById);
+      await wrapper.updateItems(updatedItems);
       const expectedData = [updatedItems[0], testData[1], updatedItems[1]];
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
@@ -93,7 +95,7 @@ describe('JsonValuesStorageWrapper', () => {
 
     it('should handle empty update array', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
-      await wrapper.updateItems([], compareById);
+      await wrapper.updateItems([]);
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
         JSON.stringify(testData),
@@ -104,7 +106,7 @@ describe('JsonValuesStorageWrapper', () => {
   describe('removeItem', () => {
     it('should remove an existing item', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
-      await wrapper.removeItem(testData[1], compareById);
+      await wrapper.removeItem(testData[1]);
       const expectedData = [testData[0], testData[2]];
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
@@ -115,7 +117,7 @@ describe('JsonValuesStorageWrapper', () => {
     it('should do nothing when item is not found', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       const nonExistentItem = { id: 999, name: 'Unknown', active: true };
-      await wrapper.removeItem(nonExistentItem, compareById);
+      await wrapper.removeItem(nonExistentItem);
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
         JSON.stringify(testData),
@@ -127,7 +129,7 @@ describe('JsonValuesStorageWrapper', () => {
     it('should remove multiple existing items', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       const itemsToRemove = [testData[0], testData[2]];
-      await wrapper.removeItems(itemsToRemove, compareById);
+      await wrapper.removeItems(itemsToRemove);
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
         JSON.stringify([testData[1]]),
@@ -136,7 +138,7 @@ describe('JsonValuesStorageWrapper', () => {
 
     it('should handle empty remove array', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
-      await wrapper.removeItems([], compareById);
+      await wrapper.removeItems([]);
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
         JSON.stringify(testData),
@@ -161,7 +163,13 @@ describe('JsonValuesStorageWrapper', () => {
   });
 
   describe('sortItems', () => {
-    it('should return sorted items', async () => {
+    it('should return sorted items using default comparison', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
+      const sortedItems = await wrapper.sortItems();
+      expect(sortedItems).toEqual([testData[0], testData[1], testData[2]]);
+    });
+
+    it('should return sorted items using custom comparison', async () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       const sortedItems = await wrapper.sortItems((a, b) =>
         a.name.localeCompare(b.name),
