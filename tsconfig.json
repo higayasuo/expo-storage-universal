@@ -16,7 +16,8 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "outDir": "dist",
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "rootDir": "src"
   },
   "include": ["src"]
 }

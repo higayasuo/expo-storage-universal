@@ -9,6 +9,7 @@ A universal storage implementation for Expo that works across all platforms. Thi
 - 🔐 Base64 encoding support for binary data
 - 📱 Consistent interface across platforms
 - ⚡ Efficient storage format for each data type
+- 🔄 Array manipulation utilities for JSON collections
 
 ## Installation
 
@@ -89,6 +90,7 @@ import {
   BooleanValueStorageWrapper,
   DateValueStorageWrapper,
   JsonValueStorageWrapper,
+  JsonValuesStorageWrapper,
   Uint8ArrayValueStorageWrapper,
 } from 'expo-storage-universal';
 
@@ -117,6 +119,56 @@ const lastLogin = await lastLoginStorage.retrieve();
 const userStorage = new JsonValueStorageWrapper<User>(storage, 'user-data');
 await userStorage.save({ id: 1, name: 'John' });
 const user = await userStorage.retrieve();
+
+// JSON array storage with collection utilities
+interface User {
+  id: number;
+  name: string;
+  active: boolean;
+}
+
+const usersStorage = new JsonValuesStorageWrapper<User>(storage, 'users');
+
+// Add a new user
+await usersStorage.addItem({ id: 1, name: 'John', active: true });
+
+// Update a user
+await usersStorage.updateItem(
+  { id: 1, name: 'Johnny', active: true },
+  (a, b) => a.id - b.id,
+);
+
+// Update multiple users
+await usersStorage.updateItems(
+  [
+    { id: 1, name: 'Johnny', active: true },
+    { id: 2, name: 'Jane', active: false },
+  ],
+  (a, b) => a.id - b.id,
+);
+
+// Remove a user
+await usersStorage.removeItem(
+  { id: 1, name: 'Johnny', active: true },
+  (a, b) => a.id - b.id,
+);
+
+// Remove multiple users
+await usersStorage.removeItems(
+  [
+    { id: 1, name: 'Johnny', active: true },
+    { id: 2, name: 'Jane', active: false },
+  ],
+  (a, b) => a.id - b.id,
+);
+
+// Filter active users
+const activeUsers = await usersStorage.getItemsByFilter((user) => user.active);
+
+// Sort users by name
+const sortedUsers = await usersStorage.sortItems((a, b) =>
+  a.name.localeCompare(b.name),
+);
 
 // Binary data storage (automatically handles base64 encoding/decoding)
 const binaryStorage = new Uint8ArrayValueStorageWrapper(storage, 'binary-data');
@@ -155,7 +207,35 @@ interface StorageWrapper<T> {
 - `BooleanValueStorageWrapper`: For storing boolean values (uses '1'/'0' for efficient storage)
 - `DateValueStorageWrapper`: For storing Date values (uses timestamp for efficient storage)
 - `JsonValueStorageWrapper<T>`: For storing JSON data with type safety
+- `JsonValuesStorageWrapper<T>`: For storing and manipulating arrays of JSON data with type safety
 - `Uint8ArrayValueStorageWrapper`: For storing binary data (automatically handles base64 encoding/decoding)
+
+### JsonValuesStorageWrapper Methods
+
+```typescript
+class JsonValuesStorageWrapper<T> extends JsonValueStorageWrapper<T[]> {
+  // Add a single item to the array
+  addItem(item: T): Promise<void>;
+
+  // Update a single item in the array
+  updateItem(item: T, compareItem: (a: T, b: T) => number): Promise<void>;
+
+  // Update multiple items in the array
+  updateItems(items: T[], compareItem: (a: T, b: T) => number): Promise<void>;
+
+  // Remove a single item from the array
+  removeItem(item: T, compareItem: (a: T, b: T) => number): Promise<void>;
+
+  // Remove multiple items from the array
+  removeItems(items: T[], compareItem: (a: T, b: T) => number): Promise<void>;
+
+  // Filter items in the array
+  getItemsByFilter(filterItem: (item: T) => boolean): Promise<T[]>;
+
+  // Sort items in the array (returns new array, doesn't modify storage)
+  sortItems(compareItem: (a: T, b: T) => number): Promise<T[]>;
+}
+```
 
 ## Storage Format Details
 

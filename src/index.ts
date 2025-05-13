@@ -1,5 +1,6 @@
 export * from './BooleanValueStorageWrapper';
 export * from './DateValueStorageWrapper';
+export * from './JsonValuesStorageWrapper';
 export * from './JsonValueStorageWrapper';
 export * from './NumberValueStorageWrapper';
 export * from './Storage';

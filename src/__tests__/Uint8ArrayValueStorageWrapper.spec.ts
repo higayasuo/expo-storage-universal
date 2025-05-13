@@ -61,7 +61,9 @@ describe('Uint8ArrayValueStorageWrapper', () => {
     it('should throw error when no value is found', async () => {
       vi.mocked(storage.find).mockResolvedValue(undefined);
 
-      await expect(wrapper.retrieve()).rejects.toThrow(`No value found for key ${testKey}`);
+      await expect(wrapper.retrieve()).rejects.toThrow(
+        `No value found for key ${testKey}`,
+      );
     });
 
     it('should throw error when storage.find fails', async () => {
@@ -87,7 +89,9 @@ describe('Uint8ArrayValueStorageWrapper', () => {
       const error = new Error('Storage error');
       vi.mocked(storage.save).mockRejectedValue(error);
 
-      await expect(wrapper.save(new Uint8Array([1, 2, 3]))).rejects.toThrow('Storage error');
+      await expect(wrapper.save(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+        'Storage error',
+      );
     });
   });
 

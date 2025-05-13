@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.5] - 2024-05-13
+
+### Added
+
+- `JsonValuesStorageWrapper<T>` for storing and manipulating arrays of JSON data with type safety
+  - `addItem`: Add a single item to the array
+  - `updateItem`: Update a single item in the array
+  - `updateItems`: Update multiple items in the array
+  - `removeItem`: Remove a single item from the array
+  - `removeItems`: Remove multiple items from the array
+  - `getItemsByFilter`: Filter items in the array
+  - `sortItems`: Sort items in the array (returns new array, doesn't modify storage)
+- Comprehensive test suite for JsonValuesStorageWrapper
+- Updated README with JsonValuesStorageWrapper documentation and examples
+
 ## [0.3.4] - 2024-05-05
 
 ### Changed
