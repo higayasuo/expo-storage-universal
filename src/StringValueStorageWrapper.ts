@@ -6,6 +6,7 @@ import { Storage } from './Storage';
  * This class implements the StorageWrapper interface specifically for string values,
  * providing a convenient API for working with string data in storage.
  *
+ * @template T - The specific string type to store. Must extend string.
  * @example
  * ```typescript
  * const storage = new WebRegularStorage();
@@ -13,8 +14,19 @@ import { Storage } from './Storage';
  * await userTokenStorage.save('abc123');
  * const token = await userTokenStorage.retrieve();
  * ```
+ *
+ * @example
+ * ```typescript
+ * // Using with a specific string type
+ * type UserRole = 'admin' | 'user' | 'guest';
+ * const roleStorage = new StringValueStorageWrapper<UserRole>(storage, 'user-role');
+ * await roleStorage.save('admin'); // Type-safe: only 'admin', 'user', or 'guest' allowed
+ * const role = await roleStorage.retrieve(); // Type is UserRole
+ * ```
  */
-export class StringValueStorageWrapper implements StorageWrapper<string> {
+export class StringValueStorageWrapper<T extends string = string>
+  implements StorageWrapper<T>
+{
   protected storage: Storage;
   protected key: string;
 
@@ -30,22 +42,23 @@ export class StringValueStorageWrapper implements StorageWrapper<string> {
 
   /**
    * Finds a string value from storage.
-   * @returns {Promise<string | undefined>} A promise that resolves to the stored string value or undefined if not found
+   * @returns {Promise<T | undefined>} A promise that resolves to the stored string value or undefined if not found
    * @throws {Error} If there's an error accessing the storage
    */
-  async find(): Promise<string | undefined> {
-    return this.storage.find(this.key);
+  async find(): Promise<T | undefined> {
+    const value = await this.storage.find(this.key);
+    return value as T | undefined;
   }
 
   /**
    * Retrieves a string value from storage.
    * Unlike find(), this method throws an error if no value is found.
    *
-   * @returns {Promise<string>} A promise that resolves to the stored string value
+   * @returns {Promise<T>} A promise that resolves to the stored string value
    * @throws {Error} If no value is found or if there's an error accessing the storage
    */
-  async retrieve(): Promise<string> {
-    const value = await this.storage.find(this.key);
+  async retrieve(): Promise<T> {
+    const value = await this.find();
 
     if (!value) {
       throw new Error(`No value found for key ${this.key}`);
@@ -56,11 +69,11 @@ export class StringValueStorageWrapper implements StorageWrapper<string> {
 
   /**
    * Saves a string value to storage.
-   * @param {string} value - The string value to store
+   * @param {T} value - The string value to store
    * @returns {Promise<void>} A promise that resolves when the value has been saved
    * @throws {Error} If there's an error saving to storage
    */
-  async save(value: string): Promise<void> {
+  async save(value: T): Promise<void> {
     return this.storage.save(this.key, value);
   }
 

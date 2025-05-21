@@ -55,6 +55,23 @@ describe('JsonValuesStorageWrapper', () => {
         JSON.stringify([testData[0], newItem]),
       );
     });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.addItem(testData[0])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage.save fails', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(undefined);
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.save).mockRejectedValue(error);
+      await expect(wrapper.addItem(testData[0])).rejects.toThrow(
+        'Storage error',
+      );
+    });
   });
 
   describe('updateItem', () => {
@@ -75,6 +92,28 @@ describe('JsonValuesStorageWrapper', () => {
       await expect(wrapper.updateItem(nonExistentItem)).rejects.toThrow(
         'Item not found in storage. The item may have been deleted or the comparison function may not match any existing items.',
       );
+    });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.updateItem(testData[0])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage.save fails', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.save).mockRejectedValue(error);
+      await expect(wrapper.updateItem(testData[0])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage returns invalid JSON', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue('invalid-json');
+      await expect(wrapper.updateItem(testData[0])).rejects.toThrow();
     });
   });
 
@@ -101,6 +140,23 @@ describe('JsonValuesStorageWrapper', () => {
         JSON.stringify(testData),
       );
     });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.updateItems([testData[0]])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage.save fails', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.save).mockRejectedValue(error);
+      await expect(wrapper.updateItems([testData[0]])).rejects.toThrow(
+        'Storage error',
+      );
+    });
   });
 
   describe('removeItem', () => {
@@ -121,6 +177,23 @@ describe('JsonValuesStorageWrapper', () => {
       expect(mockStorage.save).toHaveBeenCalledWith(
         testKey,
         JSON.stringify(testData),
+      );
+    });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.removeItem(testData[0])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage.save fails', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.save).mockRejectedValue(error);
+      await expect(wrapper.removeItem(testData[0])).rejects.toThrow(
+        'Storage error',
       );
     });
   });
@@ -144,6 +217,23 @@ describe('JsonValuesStorageWrapper', () => {
         JSON.stringify(testData),
       );
     });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.removeItems([testData[0]])).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage.save fails', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.save).mockRejectedValue(error);
+      await expect(wrapper.removeItems([testData[0]])).rejects.toThrow(
+        'Storage error',
+      );
+    });
   });
 
   describe('getItemsByFilter', () => {
@@ -159,6 +249,19 @@ describe('JsonValuesStorageWrapper', () => {
         (item) => item.id > 999,
       );
       expect(filteredItems).toEqual([]);
+    });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.getItemsByFilter(() => true)).rejects.toThrow(
+        'Storage error',
+      );
+    });
+
+    it('should throw error when storage returns invalid JSON', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue('invalid-json');
+      await expect(wrapper.getItemsByFilter(() => true)).rejects.toThrow();
     });
   });
 
@@ -181,6 +284,17 @@ describe('JsonValuesStorageWrapper', () => {
       vi.mocked(mockStorage.find).mockResolvedValue(JSON.stringify(testData));
       await wrapper.sortItems((a, b) => a.name.localeCompare(b.name));
       expect(mockStorage.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw error when storage.find fails', async () => {
+      const error = new Error('Storage error');
+      vi.mocked(mockStorage.find).mockRejectedValue(error);
+      await expect(wrapper.sortItems()).rejects.toThrow('Storage error');
+    });
+
+    it('should throw error when storage returns invalid JSON', async () => {
+      vi.mocked(mockStorage.find).mockResolvedValue('invalid-json');
+      await expect(wrapper.sortItems()).rejects.toThrow();
     });
   });
 });

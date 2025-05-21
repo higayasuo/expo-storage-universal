@@ -1,6 +1,6 @@
 {
   "name": "expo-storage-universal",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "A universal storage implementation for Expo that works across all platforms. Features type-safe storage wrappers for strings and binary data.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -19,8 +19,9 @@
   "scripts": {
     "build": "npm run typecheck && vite build",
     "test": "vitest --run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "prepare": "npm test && npm run build"
+    "prepublishOnly": "npm test && npm run build"
   },
   "keywords": [
     "expo",
@@ -31,6 +32,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.13.10",
+    "@vitest/coverage-v8": "^3.1.4",
     "jsdom": "^26.0.0",
     "typescript": "^5.8.2",
     "vite": "^6.2.1",

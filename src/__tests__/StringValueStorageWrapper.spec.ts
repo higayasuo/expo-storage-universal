@@ -58,7 +58,9 @@ describe('StringValueStorageWrapper', () => {
     it('should throw error when no value is found', async () => {
       vi.mocked(storage.find).mockResolvedValue(undefined);
 
-      await expect(wrapper.retrieve()).rejects.toThrow(`No value found for key ${testKey}`);
+      await expect(wrapper.retrieve()).rejects.toThrow(
+        `No value found for key ${testKey}`,
+      );
     });
 
     it('should throw error when storage.find fails', async () => {
@@ -101,6 +103,45 @@ describe('StringValueStorageWrapper', () => {
       vi.mocked(storage.remove).mockRejectedValue(error);
 
       await expect(wrapper.remove()).rejects.toThrow('Storage error');
+    });
+  });
+
+  describe('generic type usage', () => {
+    type UserRole = 'admin' | 'user' | 'guest';
+    let roleWrapper: StringValueStorageWrapper<UserRole>;
+
+    beforeEach(() => {
+      roleWrapper = new StringValueStorageWrapper<UserRole>(
+        storage,
+        'user-role',
+      );
+    });
+
+    it('should save and retrieve typed values', async () => {
+      const role: UserRole = 'admin';
+      vi.mocked(storage.save).mockResolvedValue(undefined);
+      vi.mocked(storage.find).mockResolvedValue(role);
+
+      await roleWrapper.save(role);
+      const retrievedRole = await roleWrapper.retrieve();
+
+      expect(retrievedRole).toBe(role);
+      expect(storage.save).toHaveBeenCalledWith('user-role', role);
+    });
+
+    it('should handle undefined values for typed wrapper', async () => {
+      vi.mocked(storage.find).mockResolvedValue(undefined);
+
+      const result = await roleWrapper.find();
+      expect(result).toBeUndefined();
+    });
+
+    it('should throw error when retrieving non-existent typed value', async () => {
+      vi.mocked(storage.find).mockResolvedValue(undefined);
+
+      await expect(roleWrapper.retrieve()).rejects.toThrow(
+        'No value found for key user-role',
+      );
     });
   });
 });

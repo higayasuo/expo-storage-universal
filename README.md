@@ -100,6 +100,15 @@ await tokenStorage.save('abc123');
 const token = await tokenStorage.retrieve(); // Throws if not found
 const maybeToken = await tokenStorage.find(); // Returns undefined if not found
 
+// String value storage with generic type
+type UserRole = 'admin' | 'user' | 'guest';
+const roleStorage = new StringValueStorageWrapper<UserRole>(
+  storage,
+  'user-role',
+);
+await roleStorage.save('admin'); // Type-safe: only 'admin', 'user', or 'guest' allowed
+const role = await roleStorage.retrieve(); // Type is UserRole
+
 // Number value storage
 const countStorage = new NumberValueStorageWrapper(storage, 'counter');
 await countStorage.save(42);
